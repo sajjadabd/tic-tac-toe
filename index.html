@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tic Tac Toe — Two Inks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="sheet">
+    <h1 class="title" aria-label="Tic Tac Toe">
+      <span class="ink-pink">Tic</span><span class="ink-blue">Tac</span><span class="ink-pink">Toe</span>
+    </h1>
+
+    <div class="scores" aria-live="polite">
+      <div class="score ink-pink"><span id="score-x">0</span><small>Pink</small></div>
+      <div class="score draws"><span id="score-d">0</span><small>Draws</small></div>
+      <div class="score ink-blue"><span id="score-o">0</span><small>Blue</small></div>
+    </div>
+
+    <p id="status" class="status" role="status">Pink starts.</p>
+
+    <div class="board-wrap">
+      <div id="board" class="board" role="grid" aria-label="Game board"></div>
+      <svg id="strike" class="strike" viewBox="0 0 300 300" aria-hidden="true"></svg>
+    </div>
+
+    <div class="controls">
+      <div class="mode" role="group" aria-label="Game mode">
+        <button id="mode-cpu" class="chip is-on" aria-pressed="true">Play the computer</button>
+        <button id="mode-two" class="chip" aria-pressed="false">Two players</button>
+      </div>
+      <button id="reset" class="print-btn">New round</button>
+    </div>
+  </main>
+  <script src="code.js"></script>
+</body>
+</html>
