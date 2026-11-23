@@ -1,41 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tic Tac Toe — Two Inks</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEON GRID // Tic-Tac-Toe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+  <script src="code.js" defer></script>
 </head>
 <body>
-  <main class="sheet">
-    <h1 class="title" aria-label="Tic Tac Toe">
-      <span class="ink-pink">Tic</span><span class="ink-blue">Tac</span><span class="ink-pink">Toe</span>
-    </h1>
+  <!-- Ambient Background Orbs & Particle Canvas -->
+  <div class="bg-orb orb-1" aria-hidden="true"></div>
+  <div class="bg-orb orb-2" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
-    <div class="scores" aria-live="polite">
-      <div class="score ink-pink"><span id="score-x">0</span><small>Pink</small></div>
-      <div class="score draws"><span id="score-d">0</span><small>Draws</small></div>
-      <div class="score ink-blue"><span id="score-o">0</span><small>Blue</small></div>
-    </div>
-
-    <p id="status" class="status" role="status">Pink starts.</p>
-
-    <div class="board-wrap">
-      <div id="board" class="board" role="grid" aria-label="Game board"></div>
-      <svg id="strike" class="strike" viewBox="0 0 300 300" aria-hidden="true"></svg>
-    </div>
-
-    <div class="controls">
-      <div class="mode" role="group" aria-label="Game mode">
-        <button id="mode-cpu" class="chip is-on" aria-pressed="true">Play the computer</button>
-        <button id="mode-two" class="chip" aria-pressed="false">Two players</button>
+  <main class="app-shell">
+    <header class="top-bar">
+      <div class="brand">
+        <span class="badge">ARCADE EDITION</span>
+        <h1>NEON <span class="accent-x">X</span><span class="accent-o">O</span> GRID</h1>
       </div>
-      <button id="reset" class="print-btn">New round</button>
+
+      <button id="sound-toggle" class="icon-btn" type="button" aria-label="Toggle sound effects" title="Toggle Sound">
+        <span id="sound-icon">🔊</span>
+      </button>
+    </header>
+
+    <!-- Mode & Difficulty Controls -->
+    <section class="controls-bar" aria-label="Game settings">
+      <div class="segmented-control" role="group" aria-label="Game mode">
+        <button class="seg-btn active" data-mode="pvp" type="button">2 Players</button>
+        <button class="seg-btn" data-mode="ai" type="button">vs AI</button>
+      </div>
+
+      <div id="difficulty-wrap" class="segmented-control hidden" role="group" aria-label="AI Difficulty">
+        <button class="seg-btn" data-diff="casual" type="button">Casual</button>
+        <button class="seg-btn active" data-diff="impossible" type="button">Unbeatable</button>
+      </div>
+    </section>
+
+    <!-- Scoreboard -->
+    <section class="scoreboard" aria-label="Scoreboard">
+      <div id="card-x" class="score-card active-turn" data-player="X">
+        <span class="score-label" id="label-x">PLAYER X</span>
+        <span class="score-value" id="score-x">0</span>
+      </div>
+      <div class="score-card draws">
+        <span class="score-label">TIES</span>
+        <span class="score-value" id="score-ties">0</span>
+      </div>
+      <div id="card-o" class="score-card" data-player="O">
+        <span class="score-label" id="label-o">PLAYER O</span>
+        <span class="score-value" id="score-o">0</span>
+      </div>
+    </section>
+
+    <!-- Status Banner -->
+    <div id="status-banner" class="status-banner" aria-live="polite">
+      <span class="status-dot"></span>
+      <span id="status-text">Player X's Turn</span>
     </div>
+
+    <!-- 3x3 Board -->
+    <section class="board-wrapper" id="board-wrapper">
+      <div id="board" class="board" data-turn="X" role="grid" aria-label="Tic Tac Toe Board">
+        <button class="cell" data-index="0" aria-label="Cell 1" type="button"></button>
+        <button class="cell" data-index="1" aria-label="Cell 2" type="button"></button>
+        <button class="cell" data-index="2" aria-label="Cell 3" type="button"></button>
+        <button class="cell" data-index="3" aria-label="Cell 4" type="button"></button>
+        <button class="cell" data-index="4" aria-label="Cell 5" type="button"></button>
+        <button class="cell" data-index="5" aria-label="Cell 6" type="button"></button>
+        <button class="cell" data-index="6" aria-label="Cell 7" type="button"></button>
+        <button class="cell" data-index="7" aria-label="Cell 8" type="button"></button>
+        <button class="cell" data-index="8" aria-label="Cell 9" type="button"></button>
+      </div>
+
+      <!-- Dynamic Winning Strike-Through Line -->
+      <svg id="win-svg" class="win-svg" aria-hidden="true">
+        <line id="win-line" x1="0" y1="0" x2="0" y2="0" />
+      </svg>
+    </section>
+
+    <!-- Action Buttons -->
+    <footer class="actions">
+      <button id="new-round-btn" class="btn primary" type="button">New Round</button>
+      <button id="reset-scores-btn" class="btn ghost" type="button">Reset Scores</button>
+    </footer>
+
+    <p class="hint">Tip: Use keys <kbd>1</kbd>–<kbd>9</kbd> to play or <kbd>R</kbd> for a new round.</p>
   </main>
-  <script src="code.js"></script>
 </body>
 </html>
